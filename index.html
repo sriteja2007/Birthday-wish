@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>A Special Birthday Wish For You ✨</title>
+
+  <!-- OpenGraph Metadata for WhatsApp, Instagram, Telegram sharing -->
+  <meta property="og:title" content="A Special Birthday Surprise For You 🎂">
+  <meta property="og:description" content="Pull the bow & release to make a wish... A cinematic birthday surprise made just for you!">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/preview.jpg">
+  <meta name="theme-color" content="#fdf5f2">
+
+  <!-- Google Fonts: Cormorant Garamond, Great Vibes, Playfair Display, Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,600;1,700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating Header Controls -->
+  <header class="top-nav" aria-label="Controls">
+    <button id="soundToggleBtn" class="control-btn" aria-label="Toggle Sound" title="Sound On / Off">
+      <span class="icon" id="soundIcon">🔊</span>
+      <span class="btn-label">Music</span>
+    </button>
+    <div class="nav-actions">
+      <button id="editNameBtn" class="control-btn highlight-btn" aria-label="Edit Name" title="Customize Recipient's Name">
+        <span class="icon">✏️</span>
+        <span class="btn-label">Edit Name</span>
+      </button>
+      <button id="shareLinkBtn" class="control-btn" aria-label="Share Link" title="Copy Personalized Link">
+        <span class="icon">🔗</span>
+        <span class="btn-label">Share</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Ambient Floating Bokeh & Petals Canvas -->
+  <canvas id="ambientCanvas" class="ambient-canvas"></canvas>
+
+  <!-- Main Experience Container -->
+  <main id="appContainer" class="experience-container stage-intro">
+
+    <!-- Cinematic Letterbox Bars -->
+    <div class="cinematic-bar bar--top" aria-hidden="true"></div>
+    <div class="cinematic-bar bar--bottom" aria-hidden="true"></div>
+
+    <!-- ==================== SCENE 1: THE BOW & HEART ==================== -->
+    <section id="sceneIntro" class="scene scene--intro active" aria-label="Pull the bow to reveal the surprise">
+      
+      <!-- Top Title -->
+      <div class="intro-heading">
+        <p class="subtitle-text">a little something, for you</p>
+      </div>
+
+      <!-- Glowing 3D Heart Target in Center -->
+      <div id="heartTarget" class="heart-target-wrapper" role="button" tabindex="0" aria-label="Glowing Heart Target - Click or shoot with bow">
+        <div class="heart-halo"></div>
+        <div class="heart-sparkles" aria-hidden="true">
+          <span class="sparkle s1">✦</span>
+          <span class="sparkle s2">✧</span>
+          <span class="sparkle s3">✦</span>
+          <span class="sparkle s4">✧</span>
+          <span class="sparkle s5">✦</span>
+        </div>
+        <div class="heart-shape-3d" id="heartElement">
+          <!-- 3D Heart with Gloss Highlight -->
+          <svg viewBox="0 0 100 90" class="heart-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="heartGrad" cx="35%" cy="30%" r="75%">
+                <stop offset="0%" stop-color="#ff7eb3" />
+                <stop offset="35%" stop-color="#ff2a7a" />
+                <stop offset="75%" stop-color="#e6005c" />
+                <stop offset="100%" stop-color="#a8003f" />
+              </radialGradient>
+              <linearGradient id="glossGrad" x1="0%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path class="heart-base" d="M 50,85 C 47,82 12,54 5,34 C -3,15 11,0 29,0 C 39,0 46,6 50,14 C 54,6 61,0 71,0 C 89,0 103,15 95,34 C 88,54 53,82 50,85 Z" fill="url(#heartGrad)" filter="drop-shadow(0px 10px 22px rgba(230, 0, 92, 0.4))" />
+            <ellipse cx="32" cy="24" rx="14" ry="8" transform="rotate(-32 32 24)" fill="url(#glossGrad)" />
+            <circle cx="24" cy="18" r="3.5" fill="#ffffff" opacity="0.95" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Interactive Bow & Arrow Area -->
+      <div id="bowContainer" class="bow-container">
+        <svg id="bowSvg" class="bow-svg" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="woodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6e3722" />
+              <stop offset="50%" stop-color="#4a2414" />
+              <stop offset="100%" stop-color="#2a1208" />
+            </linearGradient>
+            <linearGradient id="shaftGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#d4af37" />
+              <stop offset="50%" stop-color="#fff2a8" />
+              <stop offset="100%" stop-color="#b8860b" />
+            </linearGradient>
+          </defs>
+
+          <!-- Bow Stave (C-curve) -->
+          <path id="bowStave" d="M 50,45 Q 18,120 50,195" fill="none" stroke="url(#woodGrad)" stroke-width="7" stroke-linecap="round" filter="drop-shadow(0 2px 5px rgba(0,0,0,0.3))" />
+          <!-- Gold Bow Tips -->
+          <circle cx="50" cy="45" r="4.5" fill="#d4af37" />
+          <circle cx="50" cy="195" r="4.5" fill="#d4af37" />
+
+          <!-- Dynamic Bow String -->
+          <path id="bowString" d="M 50,45 L 50,120 L 50,195" fill="none" stroke="#f5e6d3" stroke-width="2.2" stroke-linecap="round" />
+
+          <!-- The Draggable Arrow -->
+          <g id="arrowGroup" class="arrow-group">
+            <!-- Arrow Shaft -->
+            <line id="arrowShaft" x1="50" y1="120" x2="155" y2="120" stroke="#4a2511" stroke-width="4.2" stroke-linecap="round" />
+            <line x1="52" y1="119" x2="153" y2="119" stroke="#d4af37" stroke-width="1.8" stroke-linecap="round" />
+
+            <!-- Arrow Head: Cute White & Gold Daisy Flower / Heart -->
+            <g id="arrowHead" transform="translate(155, 120)">
+              <!-- Flower Petals -->
+              <ellipse cx="6" cy="-4" rx="4" ry="2.5" fill="#ffffff" />
+              <ellipse cx="6" cy="4" rx="4" ry="2.5" fill="#ffffff" />
+              <ellipse cx="9" cy="0" rx="4" ry="2.5" fill="#ffffff" />
+              <circle cx="4" cy="0" r="3.2" fill="#f6d365" />
+            </g>
+
+            <!-- Arrow Tail: Pink Tulip Petals Fletching -->
+            <g id="arrowFletching" transform="translate(50, 120)">
+              <path d="M 0,0 C -10,-8 -18,-5 -12,0 C -18,5 -10,8 0,0 Z" fill="#e91e63" />
+              <path d="M -3,0 C -8,-6 -14,-3 -10,0 C -14,3 -8,6 -3,0 Z" fill="#ff4081" />
+              <!-- Nock Draggable Grip Ring -->
+              <circle id="dragHandle" class="drag-handle-glow" cx="-6" cy="0" r="14" fill="rgba(233, 30, 99, 0.2)" stroke="#ff4081" stroke-width="2" stroke-dasharray="3,2" />
+              <circle cx="-6" cy="0" r="4.5" fill="#ffffff" />
+            </g>
+          </g>
+        </svg>
+
+        <!-- "PULL & RELEASE" Caption -->
+        <div class="pull-indicator" id="pullIndicator">
+          <span class="pull-text">PULL & RELEASE</span>
+          <span class="pull-arrow-hint">‹</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flying Arrow Element -->
+    <div id="flyingArrow" class="flying-arrow-el" aria-hidden="true">
+      <svg viewBox="0 0 130 36" class="flying-arrow-svg">
+        <line x1="16" y1="18" x2="112" y2="18" stroke="#4a2511" stroke-width="4.2" stroke-linecap="round" />
+        <line x1="18" y1="17" x2="110" y2="17" stroke="#d4af37" stroke-width="1.8" stroke-linecap="round" />
+        <g transform="translate(112, 18)">
+          <ellipse cx="6" cy="-4" rx="4" ry="2.5" fill="#ffffff" />
+          <ellipse cx="6" cy="4" rx="4" ry="2.5" fill="#ffffff" />
+          <ellipse cx="9" cy="0" rx="4" ry="2.5" fill="#ffffff" />
+          <circle cx="4" cy="0" r="3.2" fill="#f6d365" />
+        </g>
+        <g transform="translate(16, 18)">
+          <path d="M 0,0 C -10,-8 -18,-5 -12,0 C -18,5 -10,8 0,0 Z" fill="#e91e63" />
+          <path d="M -3,0 C -8,-6 -14,-3 -10,0 C -14,3 -8,6 -3,0 Z" fill="#ff4081" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Particle Burst Canvas -->
+    <canvas id="burstCanvas" class="burst-canvas" aria-hidden="true"></canvas>
+
+    <!-- ==================== SCENE 2: CINEMATIC WISH ==================== -->
+    <section id="sceneCinematic" class="scene scene--cinematic" aria-label="Cinematic Birthday Wish">
+      <div class="cinematic-backdrop"></div>
+      <div class="cinematic-content">
+        <p class="wish-intro" id="wishIntroText">make a wish...</p>
+        <h1 class="wish-title">
+          <span class="word-happy" id="wordHappy">Happy</span>
+          <span class="word-birthday" id="wordBirthday">Birthday</span>
+        </h1>
+
+        <!-- Golden Flourish Underline -->
+        <div class="flourish-wrap" aria-hidden="true">
+          <svg class="flourish-svg" viewBox="0 0 380 40" xmlns="http://www.w3.org/2000/svg">
+            <path id="flourishPath" d="M 20,24 Q 130,6 240,18 T 355,22 Q 275,34 180,28" fill="none" stroke="#f6d365" stroke-width="3.5" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <!-- Custom Recipient Name in Scene 2 -->
+        <div class="wish-name-container" id="wishNameContainer">
+          <p class="wish-recipient-name" id="scene2RecipientName">Dearest One</p>
+        </div>
+
+        <p class="wish-subtitle" id="wishSubtitleText">to someone worth celebrating</p>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 3: THE HEART BLOSSOM TREE ==================== -->
+    <section id="sceneTree" class="scene scene--tree" aria-label="Blooming Heart Tree">
+      <div class="tree-atmosphere">
+        <div class="sunbeam-glow"></div>
+      </div>
+
+      <!-- Tree & Blossoms Canvas -->
+      <canvas id="treeCanvas" class="tree-canvas"></canvas>
+
+      <!-- Bottom-Left Wish Card (Matching exact text from reel) -->
+      <aside class="wish-card" id="finalWishCard">
+        <p class="card-line-top">and... make it count</p>
+        <h2 class="card-line-main">
+          <span class="script-prefix">Happy Birthday</span>
+          <span class="script-name" id="scene3RecipientName">Dearest One</span>
+        </h2>
+        <p class="card-line-bottom">here's to a year that blooms</p>
+
+        <!-- Final Action Buttons -->
+        <div class="card-actions">
+          <button id="replayBtn" class="pill-btn replay-btn" title="Replay the animation">
+            <span class="btn-icon">↺</span> Replay
+          </button>
+          <button id="cardEditBtn" class="pill-btn edit-pill-btn" title="Change Name">
+            <span class="btn-icon">✏️</span> Change Name
+          </button>
+        </div>
+      </aside>
+    </section>
+
+  </main>
+
+  <!-- ==================== EDIT NAME MODAL ==================== -->
+  <div id="nameModal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <button id="closeModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      <div class="modal-header">
+        <span class="modal-icon">🎁</span>
+        <h3 id="modalTitle">Personalize Birthday Wish</h3>
+        <p class="modal-desc">Enter the name of the special person. The entire animation, greeting card, and share link will update instantly!</p>
+      </div>
+
+      <form id="nameForm" class="modal-form" onsubmit="return false;">
+        <div class="input-group">
+          <label for="recipientNameInput">Birthday Person's Name</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="recipientNameInput" placeholder="e.g. Sarah, Alex, Mom, Bestie..." maxlength="30" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="customWishInput">Custom Subtitle (Optional)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✨</span>
+            <input type="text" id="customWishInput" placeholder="to someone worth celebrating" maxlength="60" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" id="saveNameBtn" class="primary-btn">
+            <span>✨ Save & Experience</span>
+          </button>
+          <button type="button" id="copyShareUrlBtn" class="secondary-btn">
+            <span>🔗 Copy Shareable Link</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastMessage" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Background Music Audio Elements -->
+  <audio id="bgMusic" preload="auto">
+    <source src="assets/music.m4a" type="audio/mp4">
+    <source src="assets/audio.mp4" type="video/mp4">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>

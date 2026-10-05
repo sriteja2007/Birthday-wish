@@ -1,0 +1,922 @@
+/* ==========================================================================
+   INTERACTIVE BIRTHDAY SURPRISE - STYLESHEET
+   Faithfully crafted to match the aesthetic & motion of the viral reel
+   ========================================================================== */
+
+:root {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-delicate: 'Cormorant Garamond', Georgia, serif;
+  --font-script: 'Great Vibes', cursive;
+  --font-sans: 'Montserrat', system-ui, -apple-system, sans-serif;
+
+  --color-intro-bg: #fdf5f2;
+  --color-intro-glow: #ffd6e0;
+  --color-cinematic-bg: #b80d4e;
+  --color-cinematic-bar: #12040b;
+  --color-tree-bg: #fdf4f0;
+  
+  --color-pink-primary: #ff2a7a;
+  --color-pink-deep: #b80d4e;
+  --color-pink-soft: #f8bbd0;
+  --color-gold: #f6d365;
+  --color-text-dark: #502532;
+  --color-text-muted: #7d4b58;
+  
+  --bar-height: 14vh;
+  --ease-cinematic: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-intro-bg);
+  font-family: var(--font-sans);
+  color: var(--color-text-dark);
+}
+
+/* ==========================================================================
+   TOP NAVIGATION & CONTROLS
+   ========================================================================== */
+.top-nav {
+  position: fixed;
+  top: 12px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.top-nav button {
+  pointer-events: auto;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.control-btn {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 6px 11px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 12px rgba(139, 86, 101, 0.12);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.control-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(139, 86, 101, 0.18);
+}
+
+.control-btn:active {
+  transform: translateY(1px);
+}
+
+.control-btn.highlight-btn {
+  background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 100%);
+  border-color: #ff80ab;
+  color: var(--color-pink-deep);
+  font-weight: 600;
+}
+
+.control-btn.highlight-btn:hover {
+  background: linear-gradient(135deg, #ffe0eb 0%, #ffccd9 100%);
+}
+
+.control-btn .icon {
+  font-size: 13px;
+}
+
+/* Ambient canvas for soft floating lights */
+.ambient-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   EXPERIENCE CONTAINER & SCENE LAYOUT
+   ========================================================================== */
+.experience-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+  transition: background 1s var(--ease-cinematic);
+}
+
+/* Base Scene */
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  z-index: 5;
+  transition: opacity 0.6s ease;
+}
+
+.scene.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   CINEMATIC LETTERBOX BARS
+   ========================================================================== */
+.cinematic-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: var(--bar-height);
+  background: var(--color-cinematic-bar);
+  z-index: 60;
+  will-change: transform;
+  pointer-events: none;
+  transition: transform 1s var(--ease-cinematic);
+}
+
+.bar--top {
+  top: 0;
+  transform: translateY(-100%);
+}
+
+.bar--bottom {
+  bottom: 0;
+  transform: translateY(100%);
+}
+
+/* Stage: Cinematic Active -> Bars slide in */
+.stage-cinematic .bar--top,
+.stage-cinematic .bar--bottom {
+  transform: translateY(0);
+}
+
+/* Stage: Tree Active -> Bars slide out */
+.stage-tree .bar--top {
+  transform: translateY(-100%);
+}
+.stage-tree .bar--bottom {
+  transform: translateY(100%);
+}
+
+/* ==========================================================================
+   SCENE 1: THE BOW & HEART (INTRO)
+   ========================================================================== */
+.scene--intro {
+  background: radial-gradient(circle at 50% 30%, #fff1f5 0%, #fdf5f2 55%, #faece8 100%);
+}
+
+.intro-heading {
+  position: absolute;
+  top: 15%;
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.subtitle-text {
+  font-family: var(--font-delicate);
+  font-size: clamp(23px, 3.8vw, 32px);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: 0.5px;
+  animation: fadeInDown 1.5s var(--ease-cinematic) forwards;
+}
+
+/* Heart Target */
+.heart-target-wrapper {
+  position: absolute;
+  top: 31%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  outline: none;
+}
+
+.heart-halo {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 42, 122, 0.32) 0%, rgba(255, 128, 171, 0.16) 45%, rgba(255, 255, 255, 0) 72%);
+  pointer-events: none;
+  animation: haloPulse 3.2s ease-in-out infinite;
+}
+
+.heart-shape-3d {
+  width: 100px;
+  height: 100px;
+  transform-origin: center center;
+  animation: heartbeat 2.2s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.heart-target-wrapper:hover .heart-shape-3d {
+  transform: scale(1.08);
+}
+
+.heart-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Sparkles around heart */
+.heart-sparkles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  color: #ffb6c1;
+  opacity: 0;
+  animation: sparkleTwinkle 3.2s ease-in-out infinite;
+}
+
+.s1 { top: -8px; right: 12px; animation-delay: 0.1s; color: #ff80ab; font-size: 18px; }
+.s2 { bottom: 12px; right: -16px; animation-delay: 1.0s; color: #ffd54f; font-size: 15px; }
+.s3 { bottom: -12px; left: 8px; animation-delay: 1.8s; color: #ff4081; font-size: 17px; }
+.s4 { top: 6px; left: -16px; animation-delay: 2.5s; color: #ffe082; font-size: 14px; }
+.s5 { top: -16px; left: 35px; animation-delay: 1.4s; color: #ff80ab; font-size: 13px; }
+
+/* Bow & Arrow Container */
+.bow-container {
+  position: absolute;
+  bottom: 14%;
+  left: 14%;
+  width: 220px;
+  height: 220px;
+  transform: rotate(-38deg);
+  z-index: 20;
+}
+
+@media (min-width: 768px) {
+  .bow-container {
+    bottom: 16%;
+    left: 24%;
+    width: 240px;
+    height: 240px;
+  }
+}
+
+.bow-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  touch-action: none;
+}
+
+.arrow-group {
+  cursor: grab;
+  transform-origin: 50px 120px;
+}
+
+.arrow-group:active,
+.arrow-group.dragging {
+  cursor: grabbing;
+}
+
+.drag-handle-glow {
+  transition: stroke 0.2s ease, fill 0.2s ease;
+  animation: ringPulse 2s ease-in-out infinite;
+}
+
+.arrow-group:hover .drag-handle-glow {
+  fill: rgba(255, 64, 129, 0.45);
+  stroke: #ff1744;
+}
+
+/* Pull Indicator Text - Counter rotated so it's perfectly horizontal */
+.pull-indicator {
+  position: absolute;
+  bottom: -46px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  opacity: 0.9;
+  transform: rotate(38deg);
+  transform-origin: left center;
+  animation: pulseGuide 2.2s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+.pull-text {
+  font-family: var(--font-delicate);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  color: var(--color-text-muted);
+}
+
+.pull-arrow-hint {
+  font-size: 18px;
+  color: var(--color-pink-primary);
+  animation: bounceHint 1.4s ease-in-out infinite;
+}
+
+/* Flying Arrow Element */
+.flying-arrow-el {
+  position: fixed;
+  width: 110px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 50;
+  display: none;
+  transform-origin: center center;
+}
+
+.flying-arrow-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 4px 8px rgba(230, 0, 92, 0.35));
+}
+
+/* Particle Canvas */
+.burst-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* ==========================================================================
+   SCENE 2: CINEMATIC BIRTHDAY WISH
+   ========================================================================== */
+.scene--cinematic {
+  background: radial-gradient(ellipse at 50% 45%, #e11d68 0%, #ba0d50 48%, #78002f 100%);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.cinematic-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.16) 0%, transparent 68%);
+  pointer-events: none;
+}
+
+.cinematic-content {
+  position: relative;
+  text-align: center;
+  z-index: 10;
+  padding: 0 20px;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wish-intro {
+  font-family: var(--font-delicate);
+  font-size: clamp(22px, 3.8vw, 30px);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 12px;
+  opacity: 0;
+}
+
+.wish-title {
+  font-family: var(--font-serif);
+  font-size: clamp(52px, 11vw, 98px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.5px;
+  text-shadow: 0 6px 26px rgba(0, 0, 0, 0.35);
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.word-happy, .word-birthday {
+  display: block;
+  opacity: 0;
+}
+
+/* Underline Flourish */
+.flourish-wrap {
+  width: clamp(230px, 48vw, 370px);
+  height: 38px;
+  margin: 6px auto 12px;
+  overflow: visible;
+}
+
+.flourish-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 2px 8px rgba(246, 211, 101, 0.45));
+}
+
+#flourishPath {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+}
+
+/* Custom Name in Scene 2 */
+.wish-name-container {
+  margin: 8px 0 16px;
+  opacity: 0;
+}
+
+.wish-recipient-name {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 7.5vw, 64px);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 25px rgba(255, 215, 0, 0.7);
+}
+
+.wish-subtitle {
+  font-family: var(--font-delicate);
+  font-size: clamp(18px, 2.9vw, 25px);
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.92);
+  opacity: 0;
+}
+
+/* Explicit Keyframe Sequence for Scene 2 */
+.scene--cinematic.animate .wish-intro {
+  animation: fadeDownIn 0.8s ease-out 0.1s forwards;
+}
+
+.scene--cinematic.animate .word-happy {
+  animation: fadeUpIn 0.8s var(--ease-cinematic) 0.3s forwards;
+}
+
+.scene--cinematic.animate .word-birthday {
+  animation: fadeUpIn 0.8s var(--ease-cinematic) 0.6s forwards;
+}
+
+.scene--cinematic.animate #flourishPath {
+  animation: drawStroke 1.2s ease-out 0.9s forwards;
+}
+
+.scene--cinematic.animate .wish-name-container {
+  animation: popScaleIn 0.9s var(--ease-elastic) 1.2s forwards;
+}
+
+.scene--cinematic.animate .wish-subtitle {
+  animation: fadeUpIn 0.8s ease-out 1.5s forwards;
+}
+
+/* ==========================================================================
+   SCENE 3: THE HEART BLOSSOM TREE
+   ========================================================================== */
+.scene--tree {
+  background: radial-gradient(circle at 60% 50%, #fff0e4 0%, #fde4eb 48%, #f8dfeb 100%);
+}
+
+.tree-atmosphere {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sunbeam-glow {
+  position: absolute;
+  top: 6%;
+  right: 15%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 246, 235, 0.9) 0%, rgba(255, 228, 238, 0.45) 42%, rgba(255, 255, 255, 0) 74%);
+  filter: blur(45px);
+}
+
+.tree-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+}
+
+/* Bottom-Left Wish Card */
+.wish-card {
+  position: absolute;
+  left: 5%;
+  bottom: 6%;
+  max-width: min(350px, 78vw);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: clamp(14px, 2.6vw, 22px) clamp(16px, 3.4vw, 26px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 35px rgba(177, 43, 85, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1.2s var(--ease-cinematic), transform 1.2s var(--ease-cinematic);
+}
+
+.wish-card.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-line-top {
+  font-family: var(--font-delicate);
+  font-size: clamp(15px, 2.4vw, 20px);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.card-line-main {
+  margin: 2px 0 6px;
+  line-height: 1.1;
+}
+
+.script-prefix {
+  display: block;
+  font-family: var(--font-script);
+  font-size: clamp(38px, 6.5vw, 56px);
+  font-weight: 400;
+  color: var(--color-pink-deep);
+  text-shadow: 0 2px 10px rgba(184, 13, 78, 0.25);
+}
+
+.script-name {
+  display: block;
+  font-family: var(--font-script);
+  font-size: clamp(34px, 5.8vw, 48px);
+  font-weight: 400;
+  color: #8c0a3a;
+  text-shadow: 0 2px 8px rgba(184, 13, 78, 0.3);
+  margin-top: -6px;
+}
+
+.card-line-bottom {
+  font-family: var(--font-delicate);
+  font-size: clamp(14px, 2.2vw, 19px);
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  color: var(--color-text-muted);
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(139, 86, 101, 0.12);
+}
+
+.pill-btn {
+  background: #ffffff;
+  border: 1px solid rgba(194, 24, 91, 0.22);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-pink-deep);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 8px rgba(194, 24, 91, 0.08);
+  transition: all 0.25s ease;
+}
+
+.pill-btn:hover {
+  background: var(--color-pink-deep);
+  color: #ffffff;
+  border-color: var(--color-pink-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(194, 24, 91, 0.25);
+}
+
+/* ==========================================================================
+   EDIT NAME MODAL DIALOG
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(18, 4, 11, 0.68);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-card {
+  position: relative;
+  width: 90%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  transform: scale(0.92) translateY(10px);
+  transition: transform 0.3s var(--ease-elastic);
+  margin: auto;
+}
+
+.modal-overlay.open .modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: #333;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-icon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.modal-header h3 {
+  font-family: var(--font-serif);
+  font-size: 23px;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: 6px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 15px;
+  pointer-events: none;
+  color: #999;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  border: 1.5px solid #e2d4d8;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: var(--color-text-dark);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-wrapper input:focus {
+  border-color: var(--color-pink-primary);
+  box-shadow: 0 0 0 3px rgba(255, 42, 122, 0.15);
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 6px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #ff2a7a 0%, #c2185b 100%);
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(230, 0, 92, 0.3);
+  transition: all 0.25s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(230, 0, 92, 0.4);
+}
+
+.secondary-btn {
+  background: #fdf5f8;
+  color: var(--color-pink-deep);
+  border: 1px solid rgba(194, 24, 91, 0.25);
+  padding: 10px 20px;
+  border-radius: 14px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.secondary-btn:hover {
+  background: #fae4ed;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION
+   ========================================================================== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: rgba(18, 4, 11, 0.92);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  padding: 11px 22px;
+  border-radius: 30px;
+  font-size: 13.5px;
+  font-weight: 500;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.35s var(--ease-elastic), opacity 0.35s ease;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================== */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDownIn {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUpIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drawStroke {
+  from { stroke-dashoffset: 400; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes popScaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes haloPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.08); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.05); }
+  70% { transform: scale(1); }
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(180deg); }
+}
+
+@keyframes ringPulse {
+  0%, 100% { r: 14; opacity: 0.7; }
+  50% { r: 17; opacity: 1; }
+}
+
+@keyframes pulseGuide {
+  0%, 100% { opacity: 0.8; transform: rotate(38deg) scale(1); }
+  50% { opacity: 1; transform: rotate(38deg) scale(1.04); }
+}
+
+@keyframes bounceHint {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-4px); }
+}
